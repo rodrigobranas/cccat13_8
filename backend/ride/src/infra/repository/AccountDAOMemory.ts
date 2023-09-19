@@ -1,6 +1,6 @@
 // resource - driven actor
 // adapter
-import AccountDAO from "./AccountDAO";
+import AccountDAO from "../../application/repository/AccountDAO";
 
 export default class AccountDAOMemory implements AccountDAO {
 	accounts: any = [];
