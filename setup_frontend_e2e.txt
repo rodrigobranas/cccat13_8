@@ -1,0 +1,63 @@
+1 - Vue.js 3
+
+	Instale:
+	
+	yarn create vite
+	cd frontend
+	yarn install
+	yarn dev
+	
+	No navegador:
+
+	http://localhost:5173
+
+2 - Vitest
+
+	Instale:
+
+	yarn add vitest @vue/test-utils happy-dom
+
+	Modifique as propriedades do tsconfig.json:
+
+	allowJs: true
+	types: ["vitest/globals"]
+	isolateModules: false
+	includes: ["test"]
+
+	Modifique o vite.config.ts:
+
+	/// <reference types="vitest"/>
+	import { defineConfig } from 'vite'
+	import vue from '@vitejs/plugin-vue'
+
+	// https://vitejs.dev/config/
+	export default defineConfig({
+		test: {
+			globals: true
+		},
+		plugins: [vue()],
+	});
+
+
+	Modifique o package.json
+
+	scripts: {
+		"test": "vitest --dom"
+	}
+
+3 - E2E
+
+	Instale
+
+	mkdir test na raiz do projeto
+	cd test
+	yarn init -y
+	yarn add cypress
+	yarn run cypress open
+
+	Siga o passo a passo do wizard selecionando o Chrome
+
+	Rode os testes
+
+	npx cypress run e2e
+
