@@ -3,6 +3,8 @@
 	Instale:
 	
 	yarn create vite
+	Vue
+	TypeScript
 	cd frontend
 	yarn install
 	yarn dev
@@ -44,20 +46,3 @@
 	scripts: {
 		"test": "vitest --dom"
 	}
-
-3 - E2E
-
-	Instale
-
-	mkdir test na raiz do projeto
-	cd test
-	yarn init -y
-	yarn add cypress
-	yarn run cypress open
-
-	Siga o passo a passo do wizard selecionando o Chrome
-
-	Rode os testes
-
-	npx cypress run e2e
-

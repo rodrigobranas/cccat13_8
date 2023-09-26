@@ -7,10 +7,11 @@
     "dev": "vite",
     "build": "vue-tsc && vite build",
     "preview": "vite preview",
-	"test": "vitest --dom"
+    "test": "vitest --dom"
   },
   "dependencies": {
     "@vue/test-utils": "^2.4.1",
+    "axios": "^1.5.0",
     "happy-dom": "^12.1.6",
     "vitest": "^0.34.5",
     "vue": "^3.3.4"

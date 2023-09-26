@@ -15,7 +15,7 @@ export default class RideDAODatabase implements RideDAO {
 		await this.connection.query("update cccat13.ride set driver_id = $1, status = $2 where ride_id = $3", [ride.driverId, ride.getStatus(), ride.rideId]);
 	}
 
-	async getById(rideId: string): Promise<any> {
+	async getById(rideId: string): Promise<Ride> {
 		const [rideData] = await this.connection.query("select * from cccat13.ride where ride_id = $1", [rideId]);
 		return Ride.restore(rideData.ride_id, rideData.passenger_id, rideData.driver_id, rideData.status, parseFloat(rideData.from_lat), parseFloat(rideData.from_long), parseFloat(rideData.to_lat), parseFloat(rideData.to_long), rideData.date);
 	}
