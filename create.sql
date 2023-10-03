@@ -28,3 +28,11 @@ create table cccat13.ride (
 	to_long numeric,
 	date timestamp
 );
+
+create table cccat13.position (
+	position_id uuid primary key,
+	ride_id uuid,
+	lat numeric,
+	long numeric,
+	date timestamp
+);

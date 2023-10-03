@@ -1,7 +1,7 @@
-import RideDAO from "../repository/RideDAO";
-import RideDAODatabase from "../../infra/repository/RideDAODatabase";
-import AccountDAO from "../repository/AccountDAO";
-import AccountDAODatabase from "../../infra/repository/AccountDAODatabase";
+import RideDAO from "../repository/RideRepository";
+import RideDAODatabase from "../../infra/repository/RideRepositoryDatabase";
+import AccountDAO from "../repository/AccountRepository";
+import AccountDAODatabase from "../../infra/repository/AccountRepositoryDatabase";
 
 export default class AcceptRide {
 

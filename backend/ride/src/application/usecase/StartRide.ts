@@ -1,4 +1,4 @@
-import RideDAO from "../repository/RideDAO";
+import RideDAO from "../repository/RideRepository";
 
 export default class StartRide {
 

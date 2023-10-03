@@ -1,14 +1,14 @@
 // driver
-import AccountDAO from "../../src/infra/repository/AccountDAODatabase";
+import AccountDAO from "../../src/infra/repository/AccountRepositoryDatabase";
 import sinon from "sinon";
 import MailerGateway from "../../src/infra/gateway/MailerGateway";
-import AccountDAOMemory from "../../src/infra/repository/AccountDAOMemory";
+import AccountDAOMemory from "../../src/infra/repository/AccountRepositoryMemory";
 import Account from "../../src/domain/Account";
 import Signup from "../../src/application/usecase/Signup";
 import GetAccount from "../../src/application/usecase/GetAccount";
 import Connection from "../../src/infra/database/Connection";
 import PgPromiseAdapter from "../../src/infra/database/PgPromiseAdapter";
-import AccountDAODatabase from "../../src/infra/repository/AccountDAODatabase";
+import AccountDAODatabase from "../../src/infra/repository/AccountRepositoryDatabase";
 
 let signup: Signup;
 let getAccount: GetAccount;
@@ -146,7 +146,6 @@ test("Deve criar um passageiro com spy", async function () {
 	const output = await signup.execute(input);
 	input.account_id = output.accountId;
 	const stubGetById = sinon.stub(AccountDAO.prototype, "getById").resolves(input);
-	const account = await getAccount.execute(output.accountId);
 	expect(spy.calledOnce).toBeTruthy();
 	expect(spy.calledWith(input.email, "Verification")).toBeTruthy();
 	spy.restore();
@@ -170,7 +169,6 @@ test("Deve criar um passageiro com mock", async function () {
 	const output = await signup.execute(input);
 	input.account_id = output.accountId;
 	mockAccountDAO.expects("getById").resolves(input);
-	const account = await getAccount.execute(output.accountId);
 	mock.verify();
 	mock.restore();
 });

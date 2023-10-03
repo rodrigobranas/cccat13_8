@@ -1,4 +1,10 @@
-export default class CpfValidator {
+export default class Cpf {
+	private value: string;
+
+	constructor (cpf: string) {
+		if (!this.validate(cpf)) throw new Error("Invalid cpf");
+		this.value = cpf;
+	}
 
 	validate (cpf: string) {
 		if (!cpf) return false;
@@ -37,6 +43,10 @@ export default class CpfValidator {
 
 	extractDigit (cpf: string) {
 		return cpf.substring(cpf.length-2, cpf.length);
+	}
+
+	getValue () {
+		return this.value;
 	}
 
 }

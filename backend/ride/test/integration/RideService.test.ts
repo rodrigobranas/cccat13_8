@@ -1,12 +1,12 @@
 import AcceptRide from "../../src/application/usecase/AcceptRide";
-import AccountDAO from "../../src/application/repository/AccountDAO";
-import AccountDAODatabase from "../../src/infra/repository/AccountDAODatabase";
+import AccountDAO from "../../src/application/repository/AccountRepository";
+import AccountDAODatabase from "../../src/infra/repository/AccountRepositoryDatabase";
 import Connection from "../../src/infra/database/Connection";
 import GetRide from "../../src/application/usecase/GetRide";
 import PgPromiseAdapter from "../../src/infra/database/PgPromiseAdapter";
 import RequestRide from "../../src/application/usecase/RequestRide";
-import RideDAO from "../../src/application/repository/RideDAO";
-import RideDAODatabase from "../../src/infra/repository/RideDAODatabase";
+import RideDAO from "../../src/application/repository/RideRepository";
+import RideDAODatabase from "../../src/infra/repository/RideRepositoryDatabase";
 import Signup from "../../src/application/usecase/Signup";
 import StartRide from "../../src/application/usecase/StartRide";
 
@@ -27,7 +27,7 @@ beforeEach(function () {
 	requestRide = new RequestRide(rideDAO, accountDAO);
 	acceptRide = new AcceptRide(rideDAO, accountDAO);
 	startRide = new StartRide(rideDAO);
-	getRide = new GetRide(rideDAO);
+	getRide = new GetRide(rideDAO, accountDAO);
 });
 
 test("Deve solicitar uma corrida e receber a rideId", async function () {
@@ -74,7 +74,7 @@ test("Deve solicitar e consultar uma corrida", async function () {
 	}
 	const outputRequestRide = await requestRide.execute(inputRequestRide);
 	const outputGetRide = await getRide.execute(outputRequestRide.rideId);
-	expect(outputGetRide.getStatus()).toBe("requested");
+	expect(outputGetRide.status).toBe("requested");
 	expect(outputGetRide.passengerId).toBe(outputSignup.accountId);
 	expect(outputGetRide.fromLat).toBe(inputRequestRide.from.lat);
 	expect(outputGetRide.fromLong).toBe(inputRequestRide.from.long);
@@ -117,7 +117,7 @@ test("Deve solicitar uma corrida e aceitar uma corrida", async function () {
 	}
 	await acceptRide.execute(inputAcceptRide);
 	const outputGetRide = await getRide.execute(outputRequestRide.rideId);
-	expect(outputGetRide.getStatus()).toBe("accepted");
+	expect(outputGetRide.status).toBe("accepted");
 	expect(outputGetRide.driverId).toBe(outputSignupDriver.accountId);
 });
 
@@ -234,7 +234,7 @@ test("Não deve aceitar uma corrida se o status da corrida não for requested", 
 		driverId: outputSignupDriver.accountId
 	}
 	await acceptRide.execute(inputAcceptRide);
-	await expect(() => acceptRide.execute(inputAcceptRide)).rejects.toThrow(new Error("The ride is not requested"));
+	await expect(() => acceptRide.execute(inputAcceptRide)).rejects.toThrow(new Error("Invalid status"));
 });
 
 test("Não deve aceitar uma corrida se o motorista já tiver outra corrida em andamento", async function () {
@@ -335,7 +335,7 @@ test("Deve solicitar, aceitar e iniciar uma corrida", async function () {
 	};
 	await startRide.execute(inputStartRide);
 	const outputGetRide = await getRide.execute(outputRequestRide.rideId);
-	expect(outputGetRide.getStatus()).toBe("in_progress");
+	expect(outputGetRide.status).toBe("in_progress");
 	expect(outputGetRide.driverId).toBe(outputSignupDriver.accountId);
 });
 

@@ -1,11 +1,11 @@
 import Signup from "./application/usecase/Signup";
 import GetAccount from "./application/usecase/GetAccount";
 import PgPromiseAdapter from "./infra/database/PgPromiseAdapter";
-import AccountDAODatabase from "./infra/repository/AccountDAODatabase";
+import AccountDAODatabase from "./infra/repository/AccountRepositoryDatabase";
 import ExpressAdapter from "./infra/http/ExpressAdapter";
 import MainController from "./infra/controller/MainController";
 import RequestRide from "./application/usecase/RequestRide";
-import RideDAODatabase from "./infra/repository/RideDAODatabase";
+import RideDAODatabase from "./infra/repository/RideRepositoryDatabase";
 import GetRide from "./application/usecase/GetRide";
 
 const connection = new PgPromiseAdapter();
