@@ -12,7 +12,10 @@ create table cccat13.account (
 	is_driver boolean,
 	date timestamp,
 	is_verified boolean,
-	verification_code uuid
+	verification_code uuid,
+	password text,
+	password_algorithm text,
+	salt text
 );
 
 create table cccat13.ride (

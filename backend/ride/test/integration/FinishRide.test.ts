@@ -13,6 +13,7 @@ import UpdatePosition from "../../src/application/usecase/UpdatePosition";
 import PositionRepository from "../../src/application/repository/PositionRepository";
 import PositionRepositoryDatabase from "../../src/infra/repository/PositionRepositoryDatabase";
 import FinishRide from "../../src/application/usecase/FinishRide";
+import RepositoryDatabaseFactory from "../../src/infra/factory/RepositoryDatabaseFactory";
 
 let signup: Signup;
 let requestRide: RequestRide;
@@ -32,8 +33,9 @@ beforeEach(function () {
 	accountDAO = new AccountDAODatabase(connection);
 	positionRepository = new PositionRepositoryDatabase(connection);
 	signup = new Signup(accountDAO);
-	requestRide = new RequestRide(rideDAO, accountDAO);
-	acceptRide = new AcceptRide(rideDAO, accountDAO);
+	const repositoryFactory = new RepositoryDatabaseFactory(connection);
+	requestRide = new RequestRide(repositoryFactory);
+	acceptRide = new AcceptRide(repositoryFactory);
 	updatePosition = new UpdatePosition(rideDAO, positionRepository);
 	finishRide = new FinishRide(rideDAO, positionRepository);
 	startRide = new StartRide(rideDAO);
