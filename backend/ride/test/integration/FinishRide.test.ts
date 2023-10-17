@@ -1,21 +1,21 @@
 import AcceptRide from "../../src/application/usecase/AcceptRide";
-import AccountDAO from "../../src/application/repository/AccountRepository";
-import AccountDAODatabase from "../../src/infra/repository/AccountRepositoryDatabase";
 import Connection from "../../src/infra/database/Connection";
 import GetRide from "../../src/application/usecase/GetRide";
 import PgPromiseAdapter from "../../src/infra/database/PgPromiseAdapter";
 import RequestRide from "../../src/application/usecase/RequestRide";
 import RideDAO from "../../src/application/repository/RideRepository";
 import RideDAODatabase from "../../src/infra/repository/RideRepositoryDatabase";
-import Signup from "../../src/application/usecase/Signup";
 import StartRide from "../../src/application/usecase/StartRide";
 import UpdatePosition from "../../src/application/usecase/UpdatePosition";
 import PositionRepository from "../../src/application/repository/PositionRepository";
 import PositionRepositoryDatabase from "../../src/infra/repository/PositionRepositoryDatabase";
 import FinishRide from "../../src/application/usecase/FinishRide";
 import RepositoryDatabaseFactory from "../../src/infra/factory/RepositoryDatabaseFactory";
+import AccountGateway from "../../src/application/gateway/AccountGateway";
+import AccountGatewayHttp from "../../src/infra/gateway/AccountGatewayHttp";
+import AxiosAdapter from "../../src/infra/http/AxiosAdapter";
 
-let signup: Signup;
+let accountGateway: AccountGateway;
 let requestRide: RequestRide;
 let acceptRide: AcceptRide;
 let startRide: StartRide;
@@ -24,22 +24,20 @@ let finishRide: FinishRide;
 let getRide: GetRide;
 let connection: Connection;
 let rideDAO: RideDAO;
-let accountDAO: AccountDAO;
 let positionRepository: PositionRepository;
 
 beforeEach(function () {
 	connection = new PgPromiseAdapter();
 	rideDAO = new RideDAODatabase(connection);
-	accountDAO = new AccountDAODatabase(connection);
 	positionRepository = new PositionRepositoryDatabase(connection);
-	signup = new Signup(accountDAO);
+	accountGateway = new AccountGatewayHttp(new AxiosAdapter());
 	const repositoryFactory = new RepositoryDatabaseFactory(connection);
-	requestRide = new RequestRide(repositoryFactory);
-	acceptRide = new AcceptRide(repositoryFactory);
+	requestRide = new RequestRide(repositoryFactory, accountGateway);
+	acceptRide = new AcceptRide(repositoryFactory, accountGateway);
 	updatePosition = new UpdatePosition(rideDAO, positionRepository);
 	finishRide = new FinishRide(rideDAO, positionRepository);
 	startRide = new StartRide(rideDAO);
-	getRide = new GetRide(rideDAO, accountDAO);
+	getRide = new GetRide(rideDAO, accountGateway);
 });
 
 test("Deve solicitar, aceitar, iniciar e atualizar a posição uma corrida", async function () {
@@ -49,7 +47,7 @@ test("Deve solicitar, aceitar, iniciar e atualizar a posição uma corrida", asy
 		cpf: "95818705552",
 		isPassenger: true
 	}
-	const outputSignupPassenger = await signup.execute(inputSignupPassenger);
+	const outputSignupPassenger = await accountGateway.signup(inputSignupPassenger);
 	const inputRequestRide = {
 		passengerId: outputSignupPassenger.accountId,
 		from: {
@@ -69,7 +67,7 @@ test("Deve solicitar, aceitar, iniciar e atualizar a posição uma corrida", asy
 		carPlate: "AAA9999",
 		isDriver: true
 	}
-	const outputSignupDriver = await signup.execute(inputSignupDriver);
+	const outputSignupDriver = await accountGateway.signup(inputSignupDriver);
 	const inputAcceptRide = {
 		rideId: outputRequestRide.rideId,
 		driverId: outputSignupDriver.accountId
