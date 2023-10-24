@@ -8,7 +8,7 @@ import { PBKDF2Password, Password, PasswordFactory, PlainPassword, SHA1Password 
 export default class Account {
 
 	private constructor (
-		readonly accountId: string,
+		public accountId: string,
 		readonly name: Name,
 		readonly email: Email,
 		readonly cpf: Cpf,

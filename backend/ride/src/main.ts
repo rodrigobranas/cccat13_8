@@ -8,17 +8,25 @@ import RepositoryDatabaseFactory from "./infra/factory/RepositoryDatabaseFactory
 import Registry from "./infra/di/Registry";
 import AxiosAdapter from "./infra/http/AxiosAdapter";
 import AccountGatewayHttp from "./infra/gateway/AccountGatewayHttp";
+import QueueController from "./infra/controller/QueueController";
+import UpdateRideProjection from "./application/handler/UpdateRideProjection";
+import RabbitMQAdapter from "./infra/queue/RabbitMQAdapter";
 
 const connection = new PgPromiseAdapter();
 const httpClient = new AxiosAdapter();
+const queue = new RabbitMQAdapter();
 const accountGateway = new AccountGatewayHttp(httpClient);
 const rideRepository = new RideRepositoryDatabase(connection);
 const repositoryFactory = new RepositoryDatabaseFactory(connection);
 const requestRide = new RequestRide(repositoryFactory, accountGateway);
 const getRide = new GetRide(rideRepository, accountGateway);
+const updateRideProjection = new UpdateRideProjection(rideRepository, accountGateway, connection);
 const httpServer = new ExpressAdapter();
 Registry.getInstance().provide("httpServer", httpServer);
 Registry.getInstance().provide("requestRide", requestRide);
 Registry.getInstance().provide("getRide", getRide);
+Registry.getInstance().provide("updateRideProjection", updateRideProjection);
+Registry.getInstance().provide("queue", queue);
 new MainController();
+new QueueController();
 httpServer.listen(3001);

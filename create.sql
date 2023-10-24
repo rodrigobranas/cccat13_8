@@ -39,3 +39,15 @@ create table cccat13.position (
 	long numeric,
 	date timestamp
 );
+
+create table cccat13.ride_projection (
+	ride_id uuid,
+	passenger_name text,
+	passenger_email text,
+	status text
+);
+
+create table cccat13.unit_of_work (
+	id uuid,
+	name text
+);

@@ -33,5 +33,15 @@ export default class RideRepositoryDatabase implements RideRepository {
 		const ridesData = await this.connection.query("select * from cccat13.ride where driver_id = $1 and status in ('accepted', 'in_progress')", [driverId]);
 		return ridesData;
 	}
+
+	async list(): Promise<Ride[]> {
+		const rides = [];
+		const ridesData = await this.connection.query("select * from cccat13.ride", []);
+		for (const rideData of ridesData) {
+			const ride = Ride.restore(rideData.ride_id, rideData.passenger_id, rideData.driver_id, rideData.status, parseFloat(rideData.from_lat), parseFloat(rideData.from_long), parseFloat(rideData.to_lat), parseFloat(rideData.to_long), rideData.date, parseFloat(rideData.distance), parseFloat(rideData.fare));
+			rides.push(ride);
+		}
+		return rides;
+	}
 	
 }

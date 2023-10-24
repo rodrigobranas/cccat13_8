@@ -6,15 +6,18 @@ import ExpressAdapter from "./infra/http/ExpressAdapter";
 import MainController from "./infra/controller/MainController";
 import RepositoryDatabaseFactory from "./infra/factory/RepositoryDatabaseFactory";
 import Registry from "./infra/di/Registry";
+import VerifyToken from "./application/usecase/VerifyToken";
 
 const connection = new PgPromiseAdapter();
 const accountRepository = new AccountRepositoryDatabase(connection);
 const repositoryFactory = new RepositoryDatabaseFactory(connection);
 const signup = new Signup(accountRepository);
+const verifyToken = new VerifyToken();
 const getAccount = new GetAccount(accountRepository);
 const httpServer = new ExpressAdapter();
 Registry.getInstance().provide("httpServer", httpServer);
 Registry.getInstance().provide("signup", signup);
+Registry.getInstance().provide("verifyToken", verifyToken);
 Registry.getInstance().provide("getAccount", getAccount);
 new MainController();
 httpServer.listen(3000);

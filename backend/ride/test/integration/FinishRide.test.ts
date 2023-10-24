@@ -14,6 +14,9 @@ import RepositoryDatabaseFactory from "../../src/infra/factory/RepositoryDatabas
 import AccountGateway from "../../src/application/gateway/AccountGateway";
 import AccountGatewayHttp from "../../src/infra/gateway/AccountGatewayHttp";
 import AxiosAdapter from "../../src/infra/http/AxiosAdapter";
+import GetRides from "../../src/application/query/GetRides";
+import CsvPresenter from "../../src/infra/presenter/CsvPresenter";
+import HTMLPresenter from "../../src/infra/presenter/HTMLPresenter";
 
 let accountGateway: AccountGateway;
 let requestRide: RequestRide;
@@ -97,6 +100,10 @@ test("Deve solicitar, aceitar, iniciar e atualizar a posição uma corrida", asy
 	expect(outputGetRide.status).toBe("completed");
 	expect(outputGetRide.distance).toBe(10);
 	expect(outputGetRide.fare).toBe(21);
+	// const getRides = new GetRides(rideDAO, accountGateway);
+	const getRides = new GetRides(connection, new CsvPresenter());
+	const rides = await getRides.execute();
+	console.log(rides);
 });
 
 afterEach(async function () {

@@ -9,20 +9,21 @@ import GetAccount from "../../src/application/usecase/GetAccount";
 import Connection from "../../src/infra/database/Connection";
 import PgPromiseAdapter from "../../src/infra/database/PgPromiseAdapter";
 import AccountDAODatabase from "../../src/infra/repository/AccountRepositoryDatabase";
+import UnitOfWork from "../../src/infra/database/UnitOfWork";
 
 let signup: Signup;
 let getAccount: GetAccount;
-let connection: Connection;
+let connection: UnitOfWork;
 let accountDAO: AccountDAO;
 
 beforeEach(function () {
-	connection = new PgPromiseAdapter();
+	connection = new UnitOfWork();
 	accountDAO = new AccountDAODatabase(connection);
 	signup = new Signup(accountDAO);
 	getAccount = new GetAccount(accountDAO);
 });
 
-test("Deve criar um passageiro", async function () {
+test.only("Deve criar um passageiro", async function () {
 	const input: any = {
 		name: "John Doe",
 		email: `john.doe${Math.random()}@gmail.com`,
@@ -30,6 +31,7 @@ test("Deve criar um passageiro", async function () {
 		isPassenger: true
 	}
 	const output = await signup.execute(input);
+	connection.executeTransactions();
 	const account = await getAccount.execute(output.accountId);
 	expect(account?.accountId).toBeDefined();
 	expect(account?.name).toBe(input.name);

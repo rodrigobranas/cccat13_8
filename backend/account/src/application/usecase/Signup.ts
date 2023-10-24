@@ -14,6 +14,7 @@ export default class Signup {
 		if (existingAccount) throw new Error("Account already exists");
 		const account = Account.create(input.name, input.email, input.cpf, input.isPassenger, input.isDriver, input.carPlate, input.password);
 		await this.accountRepository.save(account);
+		// uow commit
 		await this.mailerGateway.send(account.email.getValue(), "Verification", `Please verify your code at first login ${account.verificationCode}`);
 		return {
 			accountId: account.accountId

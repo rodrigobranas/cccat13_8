@@ -9,7 +9,7 @@ export default class PgPromiseAdapter implements Connection {
 		this.connection = pgp()("postgres://postgres:123456@localhost:5432/app");
 	}
 
-	query(statement: string, data: any): Promise<any> {
+	query(statement: string, data: any, transactional: boolean = false): Promise<any> {
 		return this.connection.query(statement, data);
 	}
 
